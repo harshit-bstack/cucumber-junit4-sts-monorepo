@@ -1,0 +1,18 @@
+# Credentials come from BROWSERSTACK_USERNAME / BROWSERSTACK_ACCESS_KEY env vars.
+projectName: 'cucumber junit4 sts demo'
+buildName: 'cucumber junit4 sts demo'
+framework: cucumber-junit4
+
+# No browser sessions: tests exercise the app module directly.
+browserstackAutomation: false
+testObservability: true
+accessibility: false
+percy: false
+
+testOrchestrationOptions:
+  runSmartSelection:
+    enabled: true
+    mode: 'relevantOnly'
+    # No source file needed: set the feature branch per repo identifier via env, e.g.
+    #   BROWSERSTACK_ORCHESTRATION_SMART_SELECTION_FEATURE_BRANCHES=SHOP:feature/cart-discount
+    # Optional JSON alternative (url not required):  source: 'test-selection.json'
