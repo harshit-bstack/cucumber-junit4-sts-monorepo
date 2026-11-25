@@ -8,6 +8,9 @@ import java.util.Map;
 /** Shopping cart: product quantities and subtotal. */
 public class Cart {
     public static final int MAX_QUANTITY_PER_ITEM = 5;
+    /** Bulk discount: 10% off a line once its quantity reaches this many units. */
+    public static final int BULK_DISCOUNT_MIN_QUANTITY = 3;
+    public static final double BULK_DISCOUNT_RATE = 0.10;
 
     private final Map<Product, Integer> items = new LinkedHashMap<>();
 
@@ -35,7 +38,11 @@ public class Cart {
     public long subtotalCents() {
         long total = 0;
         for (Map.Entry<Product, Integer> e : items.entrySet()) {
-            total += e.getKey().getPriceCents() * e.getValue();
+            long line = e.getKey().getPriceCents() * e.getValue();
+            if (e.getValue() >= BULK_DISCOUNT_MIN_QUANTITY) {
+                line -= Math.round(line * BULK_DISCOUNT_RATE);
+            }
+            total += line;
         }
         return total;
     }
