@@ -1,0 +1,39 @@
+// Gradle variant of the cucumber-junit4 STS demo.
+//   gradle test -Pcucumber=7.14.0 -Pforks=1 -Psdk=1.84.0 [-Pc4=true] [-Pconfig=browserstack-appautomate.yml] [-Pfilter=SingleSuite]
+// -Pc4=true switches to the Cucumber 4 sources (cucumber.api.* imports) from ../tests-c4.
+plugins { id 'java' }
+
+def cuke   = findProperty('cucumber') ?: '7.14.0'
+def forks  = (findProperty('forks') ?: '1') as int
+def sdk    = findProperty('sdk') ?: '1.84.0'
+def cfg    = findProperty('config') ?: 'browserstack.yml'
+def c4     = (findProperty('c4') ?: 'false').toString() == 'true'
+def javaSrc = c4 ? '../tests-c4/src/test/java' : '../tests/src/test/java'
+
+repositories { mavenLocal(); mavenCentral() }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets {
+    test {
+        java.srcDirs = [javaSrc, '../app/src/main/java']
+    }
+}
+
+dependencies {
+    testImplementation "io.cucumber:cucumber-java:${cuke}"
+    testImplementation "io.cucumber:cucumber-junit:${cuke}"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "com.browserstack:browserstack-java-sdk:${sdk}"
+}
+
+test {
+    maxParallelForks = forks
+    def sdkJar = configurations.testRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.find { it.name == 'browserstack-java-sdk' }?.file
+    jvmArgs "-javaagent:${sdkJar}", "-DBROWSERSTACK_CONFIG_FILE=${cfg}"
+    include '**/*Runner.class'
+    if (findProperty('filter')) { filter { includeTestsMatching findProperty('filter') } ; setIncludes(['**/*.class']) }
+    testLogging { events 'passed', 'failed', 'skipped'; showStandardStreams = false }
+    systemProperty 'cucumber.publish.quiet', 'true'
+}
