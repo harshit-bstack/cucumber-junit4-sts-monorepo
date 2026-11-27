@@ -1,0 +1,15 @@
+# App Automate variant (credentials from env). Use with -Dbs.config=browserstack-appautomate.yml
+projectName: 'cucumber junit4 sts demo'
+buildName: 'cucumber junit4 sts demo app'
+framework: cucumber-junit4
+app: cj4-sts-wikipedia
+platforms:
+  - deviceName: Samsung Galaxy S22 Ultra
+    osVersion: 12.0
+    platformName: android
+testObservability: true
+accessibility: false
+testOrchestrationOptions:
+  runSmartSelection:
+    enabled: true
+    mode: 'relevantOnly'

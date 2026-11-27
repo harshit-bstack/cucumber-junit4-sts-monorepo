@@ -3,8 +3,8 @@ projectName: 'cucumber junit4 sts demo'
 buildName: 'cucumber junit4 sts demo'
 framework: cucumber-junit4
 
-# No browser sessions: tests exercise the app module directly.
-browserstackAutomation: false
+# Automate on (as in real Selenium suites) so the build starts before orchestration; tests open no browser.
+browserstackAutomation: true
 testObservability: true
 accessibility: false
 percy: false
