@@ -6,6 +6,7 @@ plugins { id 'java' }
 def cuke   = findProperty('cucumber') ?: '7.14.0'
 def forks  = (findProperty('forks') ?: '1') as int
 def sdk    = findProperty('sdk') ?: '1.84.0'
+def sdkJarProp = findProperty('sdkJar')   // absolute path to a local SDK jar (bypasses Gradle's module cache)
 def cfg    = findProperty('config') ?: 'browserstack.yml'
 def c4     = (findProperty('c4') ?: 'false').toString() == 'true'
 def javaSrc = c4 ? '../tests-c4/src/test/java' : '../tests/src/test/java'
@@ -25,12 +26,12 @@ dependencies {
     testImplementation "io.cucumber:cucumber-java:${cuke}"
     testImplementation "io.cucumber:cucumber-junit:${cuke}"
     testImplementation 'junit:junit:4.13.2'
-    testImplementation "com.browserstack:browserstack-java-sdk:${sdk}"
+    if (sdkJarProp) testImplementation files(sdkJarProp) else testImplementation "com.browserstack:browserstack-java-sdk:${sdk}"
 }
 
 test {
     maxParallelForks = forks
-    def sdkJar = configurations.testRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.find { it.name == 'browserstack-java-sdk' }?.file
+    def sdkJar = sdkJarProp ? file(sdkJarProp) : configurations.testRuntimeClasspath.resolvedConfiguration.resolvedArtifacts.find { it.name == 'browserstack-java-sdk' }?.file
     jvmArgs "-javaagent:${sdkJar}", "-DBROWSERSTACK_CONFIG_FILE=${cfg}"
     include '**/*Runner.class'
     if (findProperty('filter')) { filter { includeTestsMatching findProperty('filter') } ; setIncludes(['**/*.class']) }
