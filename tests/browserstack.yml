@@ -1,6 +1,6 @@
 # Credentials come from BROWSERSTACK_USERNAME / BROWSERSTACK_ACCESS_KEY env vars.
 projectName: 'cucumber junit4 sts demo'
-buildName: 'cucumber junit4 sts demo'
+buildName: 'cucumber sts demo'
 framework: cucumber-junit4
 
 # Automate on (as in real Selenium suites) so the build starts before orchestration; tests open no browser.

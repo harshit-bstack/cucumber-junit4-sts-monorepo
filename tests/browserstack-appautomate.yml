@@ -1,6 +1,6 @@
 # App Automate variant (credentials from env). Use with -Dbs.config=browserstack-appautomate.yml
 projectName: 'cucumber junit4 sts demo'
-buildName: 'cucumber junit4 sts demo app'
+buildName: 'cucumber sts demo'
 framework: cucumber-junit4
 app: cj4-sts-wikipedia
 platforms:
